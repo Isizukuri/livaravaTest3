@@ -27,19 +27,22 @@ class TestHomePage(TestCase):
         self.url = reverse('home')
 
     def test_status(self):
-         response = self.client.get(self.url)
-         self.assertEqual(response.status_code, 200)
+        response = self.client.get(self.url)
+        self.assertEqual(response.status_code, 200)
 
     def test_template_used(self):
-         response = self.client.get(self.url)
-         self.assertTemplateUsed(response, 'this/index.html')
+        response = self.client.get(self.url)
+        self.assertTemplateUsed(response, 'this/index.html')
 
     def test_quesy_set(self):
-         response = self.client.get(self.url)
-         self.assertQuerysetEqual(TextNote.objects.all(),
-                                 [repr(response.context['object_list'][0]),
-                                  repr(response.context['object_list'][1])],
-                                 ordered=False)
+        self.assertQuerysetEqual(
+            TextNote.objects.all(),
+            [
+                repr(response.context['object_list'][0]),
+                repr(response.context['object_list'][1])
+            ],
+            ordered=False
+        )
 
     def test_no_text_notes(self):
         TextNote.objects.all().delete()
