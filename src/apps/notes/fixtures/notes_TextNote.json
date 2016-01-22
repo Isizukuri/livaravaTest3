@@ -1,0 +1,51 @@
+[
+{
+    "fields": {
+        "text": "Text note 1"
+    },
+    "model": "notes.textnote",
+    "pk": 7
+},
+{
+    "fields": {
+        "text": "Text note 2"
+    },
+    "model": "notes.textnote",
+    "pk": 8
+},
+{
+    "fields": {
+        "text": "Text note 3"
+    },
+    "model": "notes.textnote",
+    "pk": 9
+},
+{
+    "fields": {
+        "text": "Text note 4"
+    },
+    "model": "notes.textnote",
+    "pk": 10
+},
+{
+    "fields": {
+        "text": "Text note 5"
+    },
+    "model": "notes.textnote",
+    "pk": 11
+},
+{
+    "fields": {
+        "text": "Text note 6"
+    },
+    "model": "notes.textnote",
+    "pk": 12
+},
+{
+    "fields": {
+        "text": "Text note 7"
+    },
+    "model": "notes.textnote",
+    "pk": 13
+}
+]
