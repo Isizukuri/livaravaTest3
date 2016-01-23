@@ -35,6 +35,7 @@ class TestHomePage(TestCase):
         self.assertTemplateUsed(response, 'this/index.html')
 
     def test_quesy_set(self):
+        response = self.client.get(self.url)
         self.assertQuerysetEqual(
             TextNote.objects.all(),
             [
