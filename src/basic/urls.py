@@ -19,7 +19,7 @@ from django.contrib import admin
 from notes.views import TextNoteListView, CustomTagView
 
 urlpatterns = [
-    url(r'^admin/$', include(admin.site.urls)),
+    url(r'^admin/', include(admin.site.urls)),
     url(r'^$', TextNoteListView.as_view(), name='home'),
     url(r'^custom_tag/$', CustomTagView.as_view(), name='custom_tag'),
 ]
