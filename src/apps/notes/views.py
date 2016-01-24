@@ -12,13 +12,15 @@ class TextNoteListView(ListView):
     template_name = "this/index.html"
     model = TextNote
 
+
 class CustomTagView(TemplateView):
     """View with custom inclusion tag demo"""
     template_name = 'this/custom_tag.html'
 
+
 class TextNoteCreateView(SuccessMessageMixin, CreateView):
     template_name = 'this/note_form.html'
     model = TextNote
-    fields = ['text']
+    form_class = TextNoteForm
     success_url = ('/create_note')
     success_message = "Form successfully submited!"

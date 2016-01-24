@@ -16,9 +16,7 @@
     {% csrf_token %}
     <div class="form-group {% if form.text.errors %}has-error{% endif %}">
         <label for="text">{% trans "Enter your text note" %}</label>
-        <textarea class="form-control" rows="4" name="text" id="text" >
-        {% if form.errors %}{{ form.text.value }}{% endif %}
-        </textarea>
+        <textarea class="form-control" rows="4" name="text" id="text">{% if form.errors %}{{ form.text.value }}{% endif %}</textarea>
         <span id="errors" class="help-block">{{ form.text.errors }}</span>
     </div>
     <button type="submit" class="btn btn-default">{% trans "Create note" %}</button>
