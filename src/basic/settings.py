@@ -121,5 +121,5 @@ MEDIA_ROOT = os.path.join(BASE_DIR_UP, 'world/var/www/media')
 # Import local settings
 try:
     from local_settings import *
-    except ImportError:
-        pass
+except ImportError:
+    pass
