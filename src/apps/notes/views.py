@@ -9,6 +9,7 @@ class TextNoteListView(ListView):
     template_name = "this/index.html"
     model = TextNote
 
+
 class CustomTagView(TemplateView):
     """View with custom inclusion tag demo"""
     template_name = 'this/custom_tag.html'

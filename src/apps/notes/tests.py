@@ -51,6 +51,7 @@ class TestHomePage(TestCase):
         response = self.client.get(self.url)
         self.assertContains(response, 'No text notes.')
 
+
 class CustomInclusionTagPageTest(TestCase):
     """Test for page with custom inclusion tag"""
     def setUp(self):
