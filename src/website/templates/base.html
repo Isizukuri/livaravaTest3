@@ -27,12 +27,15 @@
         <!-- NavBar -->
         <ul class="nav nav-tabs">
             {% url "home" as home_url%}
-            <li role="presentation" {% if request.path == home_url %} class="active" {% endif %}><a href="{% url "home" %}">Home</a></li>
+            <li role="presentation" {% if request.path == home_url %} class="active" {% endif %}><a href="{% url "home" %}">{% trans "Home" %}</a></li>
+            {% url "custom_tag" as custom_tag_url %}
+            <li role="presentation" {% if request.path == custom_tag_url %} class="active" {% endif %}><a href="{% url "custom_tag" %}">{% trans "Custom Tag Endpoint" %}</a></li>
         <!-- End NavBar -->
 
         <!-- Start Main Page Content -->
         <div class="row" id="content-columns">
-            <div class="col-xs-12" id="content-column">
+            <div class="col-xs-12" id="content-column" style="margin-top: 10px;
+                                                              margin-bottom: 10px;">
                 {% block content %}{% endblock content %}
             </div>
         </div>

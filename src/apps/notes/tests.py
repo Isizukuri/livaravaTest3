@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from django.test import TestCase, Client
 from django.core.urlresolvers import reverse
+from django.template import Template, Context
 
 from models import TextNote
 # Create your tests here.
@@ -49,3 +50,36 @@ class TestHomePage(TestCase):
         TextNote.objects.all().delete()
         response = self.client.get(self.url)
         self.assertContains(response, 'No text notes.')
+
+
+class CustomInclusionTagPageTest(TestCase):
+    """Test for page with custom inclusion tag"""
+    def setUp(self):
+        self.client = Client()
+        self.url = reverse('custom_tag')
+
+    def test_status(self):
+        response = self.client.get(self.url)
+        self.assertEqual(response.status_code, 200)
+
+    def test_template_used(self):
+        response = self.client.get(self.url)
+        self.assertTemplateUsed(response, 'this/custom_tag.html')
+
+
+class CustomInclusionTagTest(TestCase):
+    """Test for custom tag, that renders text note with given id"""
+    def setUp(self):
+        self.note = TextNote(text="Text note")
+        self.note.save()
+        self.id = str(self.note.id)
+        self.TEMPLATE = Template("{% load custom_tag %} \
+                                {% custom_tag "+self.id+" %}")
+
+    def test_note_shows_up(self):
+        rendered = self.TEMPLATE.render(Context({}))
+        self.assertIn(self.note.text, rendered)
+
+    def tearDown(self):
+        self.note.delete()
+        self.note = None

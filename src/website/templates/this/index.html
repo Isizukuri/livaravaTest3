@@ -1,5 +1,6 @@
 {% extends "base.html" %} 
 {% load i18n %}
+{% load custom_tag %}
 
 {% block content %}
 <h3>{% trans 'Text Notes' %}</h3>
@@ -12,4 +13,5 @@
 {% else %}
 <p>{% trans 'No text notes.' %}</p>
 {% endif %}
+
 {% endblock content %}
