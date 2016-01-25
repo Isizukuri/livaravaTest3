@@ -88,18 +88,35 @@ class CustomInclusionTagTest(TestCase):
 class TextNoteCreateTest(TestCase):
     """Test for text note creation"""
     def test_valid_data(self):
-        form = TextNoteForm({"text": "Lorem ipsum"})
+        form = TextNoteForm({"text": "LOREM IPSUM"})
         self.assertTrue(form.is_valid())
         note = form.save()
-        self.assertEqual(note.text, "Lorem ipsum")
+        self.assertEqual(note.text, "LOREMIPSUM")
 
     def test_blank_data(self):
         form = TextNoteForm({})
         self.assertFalse(form.is_valid())
-        self.assertEqual(form.errors,  {'text': [u'This field is required.']})
+        self.assertEqual(form.errors, {'text': [u'Field can not be empty and '
+                                                'must contain at least 10 '
+                                                'uppercase symbols!']})
 
-    def test_less_then_10_chars_input(self):
-        form = TextNoteForm({"text": "123"})
+    def test_only_lowercase(self):
+        form = TextNoteForm({"text": "only lowercase note"})
+        self.assertFalse(form.is_valid())
+        self.assertEqual(form.errors, {'text': [u'Field can not be empty and '
+                                                'must contain at least 10 '
+                                                'uppercase symbols!']})
+
+    def test_less_then_10_uppercases(self):
+        form = TextNoteForm({"text": "Less then 10 UPPERcases"})
         self.assertFalse(form.is_valid())
         self.assertEqual(form.errors,
-                         {'text': [u'Can`t be shorter then 10 symbols.']})
+                         {'text': [(u'It must be at least 10 '
+                                    u'uppercase symbols!')]})
+
+    def test_less_then_10_chars(self):
+        form = TextNoteForm({"text": "NINE CHARS"})
+        self.assertFalse(form.is_valid())
+        self.assertEqual(form.errors,
+                         {'text': [(u'It must be at least 10 '
+                                    u'uppercase symbols!')]})
