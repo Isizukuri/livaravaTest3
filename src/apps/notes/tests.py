@@ -2,9 +2,12 @@
 from django.test import TestCase, Client
 from django.core.urlresolvers import reverse
 from django.template import Template, Context
+from django.test import TestCase
+from django.http import HttpRequest
 
 from models import TextNote
 from forms import TextNoteForm
+from contextprocessor import note_count_processor
 
 
 class TextNoteModelTest(TestCase):
@@ -120,3 +123,14 @@ class TextNoteCreateTest(TestCase):
         self.assertEqual(form.errors,
                          {'text': [(u'It must be at least 10 '
                                     u'uppercase symbols!')]})
+
+
+class ContextProcessorsTests(TestCase):
+    """Test for note count context processor"""
+    fixtures = ['notes_TextNote.json']
+
+    def test_processor(self):
+        """Test groups processor"""
+        request = HttpRequest()
+        data = note_count_processor(request)
+        self.assertEqual(data['notes_count'], 7)

@@ -3,9 +3,9 @@
 {% load custom_tag %}
 
 {% block content %}
-<h3>{% trans 'Text Notes' %}</h3>
+<h3 class='col-xs-8'>{% trans 'Text Notes' %}</h3>
 {% if object_list %}
-<ul>
+<ul class='col-xs-12'>
     {% for note in object_list %}
     <li>{{ note.text }}</li>
     {% endfor %}
