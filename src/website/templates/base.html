@@ -36,9 +36,10 @@
 
         <!-- Start Main Page Content -->
         <div class="row" id="content-columns">
+            <h4 class='col-xs-2'>{% trans 'total notes: ' %}{{ notes_count }}</h4>
             <div class="col-xs-12" id="content-column" style="margin-top: 10px;
                                                               margin-bottom: 10px;">
-                {% block content %}{% endblock content %}
+             {% block content %}{% endblock content %}
             </div>
         </div>
 
