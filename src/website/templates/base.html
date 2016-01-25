@@ -1,28 +1,55 @@
-{% load static from staticfiles %}
+{% load i18n %}
 <!DOCTYPE html>
-<html lang=uk>
+<html lang="uk">
 
 <head>
-    <meta charset="UTF-8">
-    <title>Document</title>
-    <!-- CSS -->
-    <link rel="stylesheet" href="{% static "bootstrap/css/bootstrap.min.css" %}">
+    <meta charset="utf-8"/>
+    <title>{% trans "Livarava Test Project" %}</title>
+    <meta name="description" value="{% trans 'LivaRava Test Project' %}">
+    <!-- Include Styles -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" integrity="sha512-dTfge/zgoMYpP7QbHy4gWMEGsbsdZeCXz7irItjcC3sPUFtf0kuFbDz/ixG7ArTxmDjLXDmezHubeNikyKGVyQ==" crossorigin="anonymous">
 </head>
 
 <body>
-    <div class='container'>
-        <h3>Contact us</h3>
-        <form action="/" method="post">
-            {% csrf_token %} {{ form.as_p }}
-            <input type="submit" value="Submit" />
-        </form>
+    <!-- Start Container -->
+    <div class="container">
+        <!-- Start Header -->
+        <div class="row" id="header">
+            {% block logo %}
+            <!-- Logo -->
+            <div class="col-md-12">
+                <h1>{% trans 'Livarava Test Task 3' %}</h1>
+            </div>
+            {% endblock logo %}
+        </div>
+        <!-- End Header -->
+
+        <!-- NavBar -->
+        <ul class="nav nav-tabs">
+            {% url "home" as home_url%}
+            <li role="presentation" {% if request.path == home_url %} class="active" {% endif %}><a href="{% url "home" %}">Home</a></li>
+        <!-- End NavBar -->
+
+        <!-- Start Main Page Content -->
+        <div class="row" id="content-columns">
+            <div class="col-xs-12" id="content-column">
+                {% block content %}{% endblock content %}
+            </div>
+        </div>
+
+        {% block footer %}
+        <!-- End Content Columns -->
+        <!-- Start Footer -->
+        <div class="row" id="footer">
+            <div class="col-xs-12">
+                &copy; 2015 {% trans 'Test task 3 LivaRava' %}
+            </div>
+        </div>
+        <!-- End Footer -->
+        {% endblock footer %}
     </div>
 
-    <!-- JS Inclusion -->
-    <script src="{% static "jquery/jquery.min.js" %}"></script>
-    <script src="{% static "bootstrap/js/bootstrap.min.js" %}"></script>
-    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
-
+<script src='https://code.jquery.com/jquery-1.11.3.min.js'></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js" integrity="sha512-K1qjQ+NcF2TYO/eI3M6v8EiNYZfA95pQumfvcVrTHtwQVDG+aHRqLi/ETn2uB+1JqwYqVG3LIvdm9lj6imS/pQ==" crossorigin="anonymous"></script>
 </body>
-
 </html>
