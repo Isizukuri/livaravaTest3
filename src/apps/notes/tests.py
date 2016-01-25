@@ -5,7 +5,6 @@ from django.template import Template, Context
 
 from models import TextNote
 from forms import TextNoteForm
-from django_webtest import WebTest
 
 
 class TextNoteModelTest(TestCase):
