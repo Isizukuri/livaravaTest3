@@ -26,8 +26,10 @@
 
         <!-- NavBar -->
         <ul class="nav nav-tabs">
-            {% url "home" as home_url%}
+            {% url "home" as home_url %}
             <li role="presentation" {% if request.path == home_url %} class="active" {% endif %}><a href="{% url "home" %}">{% trans "Home" %}</a></li>
+            {% url "create_note" as create_note_url %}
+            <li role="presentation" {% if request.path == create_note_url %} class="active" {% endif %}><a href="{% url "create_note" %}">{% trans "Create Note Form" %}</a></li>
             {% url "custom_tag" as custom_tag_url %}
             <li role="presentation" {% if request.path == custom_tag_url %} class="active" {% endif %}><a href="{% url "custom_tag" %}">{% trans "Custom Tag Endpoint" %}</a></li>
         <!-- End NavBar -->

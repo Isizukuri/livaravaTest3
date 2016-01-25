@@ -4,7 +4,7 @@ from django.core.urlresolvers import reverse
 from django.template import Template, Context
 
 from models import TextNote
-# Create your tests here.
+from forms import TextNoteForm
 
 
 class TextNoteModelTest(TestCase):
@@ -83,3 +83,23 @@ class CustomInclusionTagTest(TestCase):
     def tearDown(self):
         self.note.delete()
         self.note = None
+
+
+class TextNoteCreateTest(TestCase):
+    """Test for text note creation"""
+    def test_valid_data(self):
+        form = TextNoteForm({"text": "Lorem ipsum"})
+        self.assertTrue(form.is_valid())
+        note = form.save()
+        self.assertEqual(note.text, "Lorem ipsum")
+
+    def test_blank_data(self):
+        form = TextNoteForm({})
+        self.assertFalse(form.is_valid())
+        self.assertEqual(form.errors,  {'text': [u'This field is required.']})
+
+    def test_less_then_10_chars_input(self):
+        form = TextNoteForm({"text": "123"})
+        self.assertFalse(form.is_valid())
+        self.assertEqual(form.errors,
+                         {'text': [u'Can`t be shorter then 10 symbols.']})

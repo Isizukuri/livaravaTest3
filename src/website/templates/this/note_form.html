@@ -1,0 +1,24 @@
+{% extends "base.html" %} 
+{% load i18n %}
+
+{% block content %}
+{% if messages %}
+<div class="alert alert-success" role="alert"> {% for message in messages %}{{ message}}{% endfor %}</div>
+{% endif %}
+
+{% if form.errors %}
+<div class="alert alert-danger" role="alert">{% trans "Please, correct the errors!" %}
+<p>{{ form.non_field_errors }}</p>
+</div>
+{% endif %}
+
+<form method="post" action="{% url 'create_note' %}" class="form-horizontal col-md-6 col-xs-12">
+    {% csrf_token %}
+    <div class="form-group {% if form.text.errors %}has-error{% endif %}">
+        <label for="text">{% trans "Enter your text note" %}</label>
+        <textarea class="form-control" rows="4" name="text" id="text">{% if form.errors %}{{ form.text.value }}{% endif %}</textarea>
+        <span id="errors" class="help-block">{{ form.text.errors }}</span>
+    </div>
+    <button type="submit" class="btn btn-default">{% trans "Create note" %}</button>
+</form>
+{% endblock content %}
