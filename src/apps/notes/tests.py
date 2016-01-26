@@ -1,9 +1,12 @@
 # -*- coding: utf-8 -*-
+import json
+
 from django.test import TestCase, Client
 from django.core.urlresolvers import reverse
 from django.template import Template, Context
 from django.test import TestCase
 from django.http import HttpRequest
+from django.http import JsonResponse
 
 from models import TextNote
 from forms import TextNoteForm
@@ -134,3 +137,55 @@ class ContextProcessorsTests(TestCase):
         request = HttpRequest()
         data = note_count_processor(request)
         self.assertEqual(data['notes_count'], 7)
+
+
+class AjaxedCreateNoteViewTest(TestCase):
+    """Test for create note view with AJAX"""
+    def setUp(self):
+        self.client = Client()
+        self.url = reverse('create_note')
+
+    def test_ajax_post_status(self):
+        response = self.client.post(self.url,
+                                    HTTP_X_REQUESTED_WITH='XMLHttpRequest')
+        self.assertEqual(response.status_code, 200)
+
+    def test_ajax_post_valid_data(self):
+        response = self.client.post(self.url,
+                                    {'text': 'LOREM IPSUM'},
+                                    format='json',
+                                    HTTP_X_REQUESTED_WITH='XMLHttpRequest')
+        self.assertTrue(isinstance(response, JsonResponse))
+        self.assertIn(
+            '"message": "Form successfully submited!"',
+            response.content
+            )
+        self.assertIn('"notes_count": "1"', response.content)
+
+    def test_ajax_post_only_lowercase(self):
+        response = self.client.post(
+                                    self.url,
+                                    {'text': 'lorem ipsum'},
+                                    format='json',
+                                    HTTP_X_REQUESTED_WITH='XMLHttpRequest'
+                                    )
+        self.assertTrue(isinstance(response, JsonResponse))
+        error_message = (
+            '{"errors": {"text": ["Field can not be empty and '
+            'must contain at least 10 uppercase symbols!"]}}'
+            )
+        self.assertIn(error_message, response.content)
+
+    def test_ajax_post_less_then_10_uppercases(self):
+        response = self.client.post(
+                                    self.url,
+                                    {'text': 'Lorem Ipsum'},
+                                    format='json',
+                                    HTTP_X_REQUESTED_WITH='XMLHttpRequest'
+                                    )
+        self.assertTrue(isinstance(response, JsonResponse))
+        error_message = (
+            '{"errors": {"text": ["It must be at least 10 '
+            'uppercase symbols!"]}}'
+            )
+        self.assertIn(error_message, response.content)

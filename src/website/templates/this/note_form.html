@@ -2,19 +2,16 @@
 {% load i18n %}
 
 {% block content %}
-{% if messages %}
-<div class="alert alert-success" role="alert"> {% for message in messages %}{{ message}}{% endfor %}</div>
-{% endif %}
-
-{% if form.errors %}
-<div class="alert alert-danger" role="alert">{% trans "Please, correct the errors!" %}
-<p>{{ form.non_field_errors }}</p>
+<!-- Alerts -->
+<div class="alert alert-success {% if not messages %}hidden{% endif %}" role="alert" id='success-alert'>{% for message in messages %}{{ message}}{% endfor %}</div>
+<div class="alert alert-danger {% if not form.errors %}hidden{% endif %}" role="alert" id='error-alert'>{% trans "Please, correct the errors!" %}
+<p id='non-field-errors'>{% if form.errors %}{{ form.non_field_errors }}{% endif %}</p>
 </div>
-{% endif %}
+<!-- End Alerts -->
 
-<form method="post" action="{% url 'create_note' %}" class="form-horizontal col-md-6 col-xs-12">
+<form method="post" action="{% url 'create_note' %}" id="notesForm" class="form-horizontal col-md-6 col-xs-12">
     {% csrf_token %}
-    <div class="form-group {% if form.text.errors %}has-error{% endif %}">
+    <div class="form-group {% if form.text.errors %}has-error{% endif %}" id='text-field'>
         <label for="text">{% trans "Enter your text note" %}</label>
         <textarea class="form-control" rows="4" name="text" id="text">{% if form.errors %}{{ form.text.value }}{% endif %}</textarea>
         <span id="errors" class="help-block">{{ form.text.errors }}</span>
