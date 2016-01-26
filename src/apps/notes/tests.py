@@ -1,6 +1,4 @@
 # -*- coding: utf-8 -*-
-import json
-
 from django.test import TestCase, Client
 from django.core.urlresolvers import reverse
 from django.template import Template, Context
