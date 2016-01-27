@@ -35,6 +35,7 @@ $(document).ready(function() {
                             $('#text-field').removeClass('has-error')
                             $('#errors-text').html('')
                             $('#text').val('')
+                            $("#image-input").val('')
                             $('#notes-count').html(data.notes_count)
                         };
                     },
