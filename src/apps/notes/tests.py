@@ -6,6 +6,9 @@ from django.test import TestCase
 from django.http import HttpRequest
 from django.http import JsonResponse
 
+from StringIO import StringIO
+from PIL import Image
+
 from models import TextNote
 from forms import TextNoteForm
 from contextprocessor import note_count_processor
@@ -142,6 +145,11 @@ class AjaxedCreateNoteViewTest(TestCase):
     def setUp(self):
         self.client = Client()
         self.url = reverse('create_note')
+        self.file_obj = StringIO()
+        self.image = Image.new("RGBA", size=(50, 50), color=(256, 0, 0))
+        self.image.save(self.file_obj, 'png')
+        self.file_obj.name = 'test.png'
+        self.file_obj.seek(0)
 
     def test_ajax_post_status(self):
         response = self.client.post(self.url,
@@ -150,7 +158,10 @@ class AjaxedCreateNoteViewTest(TestCase):
 
     def test_ajax_post_valid_data(self):
         response = self.client.post(self.url,
-                                    {'text': 'LOREM IPSUM'},
+                                    {
+                                        'text': 'LOREM IPSUM',
+                                        'image': self.file_obj,
+                                    },
                                     format='json',
                                     HTTP_X_REQUESTED_WITH='XMLHttpRequest')
         self.assertTrue(isinstance(response, JsonResponse))
@@ -163,7 +174,10 @@ class AjaxedCreateNoteViewTest(TestCase):
     def test_ajax_post_only_lowercase(self):
         response = self.client.post(
                                     self.url,
-                                    {'text': 'lorem ipsum'},
+                                    {
+                                        'text': 'lorem ipsum',
+                                        'image': self.file_obj,
+                                    },
                                     format='json',
                                     HTTP_X_REQUESTED_WITH='XMLHttpRequest'
                                     )
@@ -177,7 +191,10 @@ class AjaxedCreateNoteViewTest(TestCase):
     def test_ajax_post_less_then_10_uppercases(self):
         response = self.client.post(
                                     self.url,
-                                    {'text': 'Lorem Ipsum'},
+                                    {
+                                        'text': 'Lorem Ipsum',
+                                        'image': self.file_obj,
+                                    },
                                     format='json',
                                     HTTP_X_REQUESTED_WITH='XMLHttpRequest'
                                     )
@@ -186,4 +203,41 @@ class AjaxedCreateNoteViewTest(TestCase):
             '{"errors": {"text": ["It must be at least 10 '
             'uppercase symbols!"]}}'
             )
+        self.assertIn(error_message, response.content)
+
+    def test_ajax_post_blank_file(self):
+        blank_file = StringIO()
+        blank_file.name = 'not_image.file'
+        blank_file.seek(0)
+        response = self.client.post(
+                                    self.url,
+                                    {
+                                        'text': 'LOREM IPSUM',
+                                        'image': blank_file,
+                                    },
+                                    format='json',
+                                    HTTP_X_REQUESTED_WITH='XMLHttpRequest'
+                                    )
+        self.assertTrue(isinstance(response, JsonResponse))
+        error_message = '"errors": {"image": ["The submitted file is empty."]}'
+        self.assertIn(error_message, response.content)
+
+    def test_ajax_post_invalid_image(self):
+        not_image = StringIO()
+        not_image.write('First line.\n')
+        not_image.name = 'not_image.file'
+        not_image.seek(0)
+        response = self.client.post(
+                                        self.url,
+                                        {
+                                            'text': 'LOREM IPSUM',
+                                            'image': not_image,
+                                        },
+                                        format='json',
+                                        HTTP_X_REQUESTED_WITH='XMLHttpRequest'
+                                        )
+        self.assertTrue(isinstance(response, JsonResponse))
+        error_message = (
+            'Upload a valid image. The file you uploaded was either not an '
+            'image or a corrupted image.')
         self.assertIn(error_message, response.content)

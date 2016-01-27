@@ -7,8 +7,22 @@ $(document).ready(function() {
                             if (!($('#success-alert').hasClass('hidden'))){
                                 $('#success-alert').addClass('hidden')
                             }
-                            $('#text-field').addClass('has-error')
-                            $('#errors').html(data.errors.text)
+                            if (data.errors.text){
+                                $('#text-field').addClass('has-error')
+                                $('#errors-text').html(data.errors.text)
+                            }
+                            else {
+                                $('#text-field').removeClass('has-error')
+                                $('#errors-text').html('')
+                            }
+                            if (data.errors.image){
+                                $('#image-field').addClass('has-error')
+                                $('#errors-image').html(data.errors.image)
+                            }
+                            else {
+                                $('#image-field').removeClass('has-error')
+                                $('#errors-image').html('')
+                            }
                             $('#error-alert').removeClass('hidden')
                             $('#non-field-errors').html(data.non_field_errors)
                         }
@@ -19,7 +33,7 @@ $(document).ready(function() {
                             $('#success-alert').removeClass('hidden')
                             $('#success-alert').html(data.message)
                             $('#text-field').removeClass('has-error')
-                            $('#errors').html('')
+                            $('#errors-text').html('')
                             $('#text').val('')
                             $('#notes-count').html(data.notes_count)
                         };

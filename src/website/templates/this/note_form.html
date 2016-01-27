@@ -9,12 +9,17 @@
 </div>
 <!-- End Alerts -->
 
-<form method="post" action="{% url 'create_note' %}" id="notesForm" class="form-horizontal col-md-6 col-xs-12">
+<form method="POST" action="{% url 'create_note' %}" enctype=multipart/form-data id="notesForm" class="form-horizontal col-md-6 col-xs-12">
     {% csrf_token %}
     <div class="form-group {% if form.text.errors %}has-error{% endif %}" id='text-field'>
         <label for="text">{% trans "Enter your text note" %}</label>
         <textarea class="form-control" rows="4" name="text" id="text">{% if form.errors %}{{ form.text.value }}{% endif %}</textarea>
-        <span id="errors" class="help-block">{{ form.text.errors }}</span>
+        <span id="errors-text" class="help-block">{{ form.text.errors }}</span>
+    </div>
+    <div class="form-group" id='image-field'>
+        <label for="image-input">{% trans "Attach your image" %}</label>
+        <input type="file" id="image-input" name="image">
+        <span class="help-block" id="errors-image">{{ form.image.errors }}</span>
     </div>
     <button type="submit" class="btn btn-default">{% trans "Create note" %}</button>
 </form>

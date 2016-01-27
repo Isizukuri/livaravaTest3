@@ -32,4 +32,4 @@ class TextNoteForm(ModelForm):
 
     class Meta:
         model = TextNote
-        fields = ['text']
+        fields = ['text', 'image']
