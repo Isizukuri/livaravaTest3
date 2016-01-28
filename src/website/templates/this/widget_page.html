@@ -1,0 +1,20 @@
+{% extends "base.html" %} 
+{% load i18n %}
+{% block content %}
+<div class="panel panel-default" style="margin-top: 20px;">
+    <div class="panel-heading">
+        <h3 class="panel-title">{% trans "Insert code below in your page to get random text note." %}</h3>
+    </div>
+    <textarea class="panel-body" rows="2" style="width: 100%;">
+        <iframe src="http://{{ request.META.HTTP_HOST }}/widget_return"></iframe>
+    </textarea>
+</div>
+<div class="panel panel-default" style="margin-top: 20px;">
+    <div class="panel-heading">
+        <h5>{% trans "Example:" %}</h5>
+    </div>
+    <div class="panel-body">
+        <iframe src="http:///127.0.0.1:8000/widget_return"></iframe>
+    </div>
+</div>
+{% endblock content %}

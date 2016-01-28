@@ -184,7 +184,7 @@ class AjaxedCreateNoteViewTest(TestCase):
         )
         self.assertTrue(isinstance(response, JsonResponse))
         error_message = json.dumps({"errors": {"text": [(
-            "Field can not be empty and must contain at least"
+            "Field can not be empty and must contain at least "
             "10 uppercase symbols!")]}})
         self.assertJSONEqual(error_message, response.content)
 
@@ -240,3 +240,42 @@ class AjaxedCreateNoteViewTest(TestCase):
                     'uploaded was either not an image or '
                     'a corrupted image.')]}})
         self.assertJSONEqual(error_message, response.content)
+
+
+class TestWidgetPage(TestCase):
+    """Test for page with widget"""
+    def setUp(self):
+        self.client = Client()
+        self.url = reverse('widget')
+
+    def test_status(self):
+        response = self.client.get(self.url)
+        self.assertEqual(response.status_code, 200)
+
+    def test_template_used(self):
+        response = self.client.get(self.url)
+        self.assertTemplateUsed(response, 'this/widget_page.html')
+
+
+class TestWidget(TestCase):
+    """Test for widget with random text note"""
+    fixtures = ['notes_TextNote.json']
+
+    def setUp(self):
+        self.client = Client()
+        self.url = reverse('widget_return')
+
+    def test_status(self):
+        response = self.client.get(self.url)
+        self.assertEqual(response.status_code, 200)
+
+    def test_template_used(self):
+        response = self.client.get(self.url)
+        self.assertTemplateUsed(response, 'this/random_widget.html')
+
+    def test_widget_context(self):
+        response = self.client.get(self.url)
+        self.assertIn(
+            response.context['random_text_note'],
+            TextNote.objects.all()
+        )

@@ -15,12 +15,18 @@ Including another URLconf
 """
 from django.conf.urls import include, url
 from django.contrib import admin
+from django.conf import settings
+from django.conf.urls.static import static
 
-from notes.views import TextNoteListView, CustomTagView, TextNoteCreateView
+from notes.views import TextNoteListView, CustomTagView, TextNoteCreateView,\
+    WidgetGetView, WidgetView
+
 
 urlpatterns = [
     url(r'^admin/', include(admin.site.urls)),
     url(r'^$', TextNoteListView.as_view(), name='home'),
     url(r'^custom_tag/$', CustomTagView.as_view(), name='custom_tag'),
     url(r'^create_note/$', TextNoteCreateView.as_view(), name='create_note'),
-]
+    url(r'^widget/$', WidgetGetView.as_view(), name='widget'),
+    url(r'^widget_return/$', WidgetView.as_view(), name='widget_return'),
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
