@@ -159,13 +159,14 @@ class AjaxedCreateNoteViewTest(TestCase):
         self.assertEqual(response.status_code, 200)
 
     def test_ajax_post_valid_data(self):
-        response = self.client.post(self.url,
-                                    {
-                                        'text': 'LOREM IPSUM',
-                                        'image': self.file_obj,
-                                    },
-                                    format='json',
-                                    HTTP_X_REQUESTED_WITH='XMLHttpRequest')
+        response = self.client.post(
+            self.url,
+            {
+                'text': 'LOREM IPSUM',
+                'image': self.file_obj,
+            },
+            format='json', HTTP_X_REQUESTED_WITH='XMLHttpRequest'
+        )
         self.assertTrue(isinstance(response, JsonResponse))
         succes_message = json.dumps(
             {u'message': u'Form successfully submited!', u'notes_count': u'1'}
@@ -174,14 +175,13 @@ class AjaxedCreateNoteViewTest(TestCase):
 
     def test_ajax_post_only_lowercase(self):
         response = self.client.post(
-                                    self.url,
-                                    {
-                                        'text': 'lorem ipsum',
-                                        'image': self.file_obj,
-                                    },
-                                    format='json',
-                                    HTTP_X_REQUESTED_WITH='XMLHttpRequest'
-                                    )
+            self.url,
+            {
+                'text': 'lorem ipsum',
+                'image': self.file_obj,
+            },
+            format='json', HTTP_X_REQUESTED_WITH='XMLHttpRequest'
+        )
         self.assertTrue(isinstance(response, JsonResponse))
         error_message = json.dumps({"errors": {"text": [(
             "Field can not be empty and must contain at least"
@@ -190,14 +190,13 @@ class AjaxedCreateNoteViewTest(TestCase):
 
     def test_ajax_post_less_then_10_uppercases(self):
         response = self.client.post(
-                                    self.url,
-                                    {
-                                        'text': 'Lorem Ipsum',
-                                        'image': self.file_obj,
-                                    },
-                                    format='json',
-                                    HTTP_X_REQUESTED_WITH='XMLHttpRequest'
-                                    )
+            self.url,
+            {
+                'text': 'Lorem Ipsum',
+                'image': self.file_obj,
+            },
+            format='json', HTTP_X_REQUESTED_WITH='XMLHttpRequest'
+        )
         self.assertTrue(isinstance(response, JsonResponse))
         error_message = json.dumps(
             {"errors": {"text": ["It must be at least 10 uppercase symbols!"]}}
@@ -209,14 +208,13 @@ class AjaxedCreateNoteViewTest(TestCase):
         blank_file.name = 'not_image.file'
         blank_file.seek(0)
         response = self.client.post(
-                                    self.url,
-                                    {
-                                        'text': 'LOREM IPSUM',
-                                        'image': blank_file,
-                                    },
-                                    format='json',
-                                    HTTP_X_REQUESTED_WITH='XMLHttpRequest'
-                                    )
+            self.url,
+            {
+                'text': 'LOREM IPSUM',
+                'image': blank_file,
+            },
+            format='json', HTTP_X_REQUESTED_WITH='XMLHttpRequest'
+        )
         self.assertTrue(isinstance(response, JsonResponse))
         error_message = json.dumps(
             {"errors": {"image": ["The submitted file is empty."]}})
@@ -233,8 +231,7 @@ class AjaxedCreateNoteViewTest(TestCase):
                 'text': 'LOREM IPSUM',
                 'image': not_image,
             },
-            format='json',
-            HTTP_X_REQUESTED_WITH='XMLHttpRequest'
+            format='json', HTTP_X_REQUESTED_WITH='XMLHttpRequest'
         )
         self.assertTrue(isinstance(response, JsonResponse))
         error_message = json.dumps(
