@@ -1,9 +1,15 @@
 # -*- coding: utf-8 -*-
+import json
+
 from django.test import TestCase, Client
 from django.core.urlresolvers import reverse
 from django.template import Template, Context
 from django.test import TestCase
 from django.http import HttpRequest
+from django.http import JsonResponse
+
+from StringIO import StringIO
+from PIL import Image
 
 from models import TextNote
 from forms import TextNoteForm
@@ -134,3 +140,103 @@ class ContextProcessorsTests(TestCase):
         request = HttpRequest()
         data = note_count_processor(request)
         self.assertEqual(data['notes_count'], 7)
+
+
+class AjaxedCreateNoteViewTest(TestCase):
+    """Test for create note view with AJAX"""
+    def setUp(self):
+        self.client = Client()
+        self.url = reverse('create_note')
+        self.file_obj = StringIO()
+        self.image = Image.new("RGBA", size=(50, 50), color=(256, 0, 0))
+        self.image.save(self.file_obj, 'png')
+        self.file_obj.name = 'test.png'
+        self.file_obj.seek(0)
+
+    def test_ajax_post_status(self):
+        response = self.client.post(self.url,
+                                    HTTP_X_REQUESTED_WITH='XMLHttpRequest')
+        self.assertEqual(response.status_code, 200)
+
+    def test_ajax_post_valid_data(self):
+        response = self.client.post(
+            self.url,
+            {
+                'text': 'LOREM IPSUM',
+                'image': self.file_obj,
+            },
+            format='json', HTTP_X_REQUESTED_WITH='XMLHttpRequest'
+        )
+        self.assertTrue(isinstance(response, JsonResponse))
+        succes_message = json.dumps(
+            {u'message': u'Form successfully submited!', u'notes_count': u'1'}
+            )
+        self.assertJSONEqual(succes_message, response.content)
+
+    def test_ajax_post_only_lowercase(self):
+        response = self.client.post(
+            self.url,
+            {
+                'text': 'lorem ipsum',
+                'image': self.file_obj,
+            },
+            format='json', HTTP_X_REQUESTED_WITH='XMLHttpRequest'
+        )
+        self.assertTrue(isinstance(response, JsonResponse))
+        error_message = json.dumps({"errors": {"text": [(
+            "Field can not be empty and must contain at least"
+            "10 uppercase symbols!")]}})
+        self.assertJSONEqual(error_message, response.content)
+
+    def test_ajax_post_less_then_10_uppercases(self):
+        response = self.client.post(
+            self.url,
+            {
+                'text': 'Lorem Ipsum',
+                'image': self.file_obj,
+            },
+            format='json', HTTP_X_REQUESTED_WITH='XMLHttpRequest'
+        )
+        self.assertTrue(isinstance(response, JsonResponse))
+        error_message = json.dumps(
+            {"errors": {"text": ["It must be at least 10 uppercase symbols!"]}}
+            )
+        self.assertJSONEqual(error_message, response.content)
+
+    def test_ajax_post_blank_file(self):
+        blank_file = StringIO()
+        blank_file.name = 'not_image.file'
+        blank_file.seek(0)
+        response = self.client.post(
+            self.url,
+            {
+                'text': 'LOREM IPSUM',
+                'image': blank_file,
+            },
+            format='json', HTTP_X_REQUESTED_WITH='XMLHttpRequest'
+        )
+        self.assertTrue(isinstance(response, JsonResponse))
+        error_message = json.dumps(
+            {"errors": {"image": ["The submitted file is empty."]}})
+        self.assertJSONEqual(error_message, response.content)
+
+    def test_ajax_post_invalid_image(self):
+        not_image = StringIO()
+        not_image.write('First line.\n')
+        not_image.name = 'not_image.file'
+        not_image.seek(0)
+        response = self.client.post(
+            self.url,
+            {
+                'text': 'LOREM IPSUM',
+                'image': not_image,
+            },
+            format='json', HTTP_X_REQUESTED_WITH='XMLHttpRequest'
+        )
+        self.assertTrue(isinstance(response, JsonResponse))
+        error_message = json.dumps(
+            {'errors': {'image': [(
+                    'Upload a valid image. The file you '
+                    'uploaded was either not an image or '
+                    'a corrupted image.')]}})
+        self.assertJSONEqual(error_message, response.content)

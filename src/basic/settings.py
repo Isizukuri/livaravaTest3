@@ -42,11 +42,13 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     # Custom apps.
+    'corsheaders',
     'notes',
 )
 
 MIDDLEWARE_CLASSES = (
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -122,6 +124,9 @@ STATICFILES_DIRS = (
 # Media files.
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR_UP, 'world/var/www/media')
+
+# CORS settings
+CORS_ORIGIN_ALLOW_ALL = True
 
 try:
     from local_settings import *
