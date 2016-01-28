@@ -238,11 +238,8 @@ class AjaxedCreateNoteViewTest(TestCase):
         )
         self.assertTrue(isinstance(response, JsonResponse))
         error_message = json.dumps(
-            {'errors':
-                {'image': [(
+            {'errors': {'image': [(
                     'Upload a valid image. The file you '
                     'uploaded was either not an image or '
-                    'a corrupted image.')]}
-            }
-        )
+                    'a corrupted image.')]}})
         self.assertJSONEqual(error_message, response.content)
