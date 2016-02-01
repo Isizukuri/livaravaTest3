@@ -264,18 +264,14 @@ class TestWidget(TestCase):
     def setUp(self):
         self.client = Client()
         self.url = reverse('widget_return')
+        self.response = self.client.get(self.url)
+        self.notes = [object.text for object in TextNote.objects.all()]
 
     def test_status(self):
-        response = self.client.get(self.url)
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(self.response.status_code, 200)
 
-    def test_template_used(self):
-        response = self.client.get(self.url)
-        self.assertTemplateUsed(response, 'this/random_widget.html')
-
-    def test_widget_context(self):
-        response = self.client.get(self.url)
+    def test_widget_content(self):
         self.assertIn(
-            response.context['random_text_note'],
-            TextNote.objects.all()
+            self.response.content.split('<div>')[1].split('</div>')[0],
+            self.notes
         )

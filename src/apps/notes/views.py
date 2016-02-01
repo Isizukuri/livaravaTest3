@@ -67,6 +67,9 @@ class WidgetView(View):
     http_method_names = ['get', ]
 
     def get(self, request, *args, **kwargs):
-        random_note = random.choice(TextNote.objects.all()).text
+        if TextNote.objects.all():
+            random_note = random.choice(TextNote.objects.all()).text
+        else:
+            random_note = _(u'No text notes.')
         response = u"document.write('<div>{}</div>')".format(random_note)
         return HttpResponse(response)
