@@ -48,6 +48,6 @@ class TextNote(models.Model):
 
     def delete(self, *args, **kwargs):
         for book in self.book_set.all():
-            if len(book.note.all())==1:
+            if len(book.note.all()) == 1:
                 book.delete()
         super(TextNote, self).delete(*args, **kwargs)
