@@ -184,7 +184,7 @@ class AjaxedCreateNoteViewTest(TestCase):
         )
         self.assertTrue(isinstance(response, JsonResponse))
         error_message = json.dumps({"errors": {"text": [(
-            "Field can not be empty and must contain at least"
+            "Field can not be empty and must contain at least "
             "10 uppercase symbols!")]}})
         self.assertJSONEqual(error_message, response.content)
 
