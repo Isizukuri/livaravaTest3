@@ -33,6 +33,9 @@
             <li role="presentation" {% if request.path == create_note_url %} class="active" {% endif %}><a href="{% url "create_note" %}">{% trans "Create Note Form" %}</a></li>
             {% url "custom_tag" as custom_tag_url %}
             <li role="presentation" {% if request.path == custom_tag_url %} class="active" {% endif %}><a href="{% url "custom_tag" %}">{% trans "Custom Tag Endpoint" %}</a></li>
+            {% url "last_requests" as last_requests_url %}
+            <li role="presentation" {% if request.path == last_requests_url %} class="active" {% endif %}><a href="{% url "last_requests" %}">{% trans "Last 10 Requests" %}</a></li>
+
         <!-- End NavBar -->
 
         <!-- Start Main Page Content -->

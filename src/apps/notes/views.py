@@ -1,3 +1,5 @@
+import json
+
 from django.views.generic import ListView, TemplateView
 from django.views.generic.edit import CreateView
 from django.utils.translation import ugettext as _
@@ -6,7 +8,7 @@ from django.core.urlresolvers import reverse
 from django.http import JsonResponse
 from django.contrib import messages
 
-from models import TextNote
+from models import TextNote, LastRequest
 from forms import TextNoteForm
 
 
@@ -53,3 +55,35 @@ class TextNoteCreateView(SuccessMessageMixin, CreateView):
 
     def get_success_url(self):
         return reverse('create_note')
+
+
+class RequestListView(ListView):
+    """View that displays last 10 requests"""
+    template_name = "this/last_requests.html"
+    model = LastRequest
+
+    def get_queryset(self):
+        queryset = super(RequestListView, self).get_queryset()
+        queryset = queryset.order_by('-timestamp')[:10]
+        return queryset
+
+    def get(self, request, *args, **kwargs):
+        if request.is_ajax():
+            if self.get_queryset():
+                response = []
+                for item in self.get_queryset():
+                    response.append({
+                        'pk': item.pk,
+                        'url': item.url,
+                        'method': item.method,
+                        'timestamp': item.timestamp
+                    })
+                return JsonResponse(response, safe=False)
+            else:
+                response = {'error': 'There are no requests at all.'}
+                return JsonResponse(response, safe=False)
+        else:
+            response = super(RequestListView, self).get(
+                self, request, *args, **kwargs)
+            print response.context_data
+            return response
