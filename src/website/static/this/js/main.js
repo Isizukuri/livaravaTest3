@@ -43,29 +43,29 @@ $(document).ready(function() {
         $(this).ajaxSubmit(options);
         return false;
         });
-    });
 
-    title = document.title
+    var title = document.title
+    var viewed_requests_pk_list = []
 
-    $(window).blur(function(){
-        
-        document.title = 'Inactive | ' + title;
-    });
-
-    $(window).focus(function(){
+    Visibility.change(function (e, state) {
+        if (state=='visible'){
             document.title = "Active | " + title;
-            setInterval(function(){
-                $.get("/last_requests/", function(data) {
-                    $('#request_list').empty();
-                    for (index in data){
-                        console.log(data[index])
-                        $('#request_list').append($('<li>').append(
-                            data[index].timestamp+
-                            " url: "+data[index].url+
-                            ", method: "+data[index].method
+                setInterval(function(){
+                    $.get("/last_requests/", function(data) {
+                        $('#request_list').empty();
+                        for (index in data){
+                            $('#request_list').append($('<li>').append(
+                                data[index].timestamp+
+                                " url: "+data[index].url+
+                                ", method: "+data[index].method
+                                )
                             )
-                        )
-                    };
-                });
-            }, 5000);
+                        };
+                    });
+                }, 5000);
+        }
+        else if (state=='hidden'){
+
+        };
     });
+});
