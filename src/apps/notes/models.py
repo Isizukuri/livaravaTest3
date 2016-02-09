@@ -1,10 +1,14 @@
+import uuid
+
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 
 
 def image_directory_path(instance, filename):
     """Define image upload path"""
-    return 'note_{0}/{1}'.format(instance, filename)
+    ext = filename.split('.')[-1]
+    filename = 'path/to/save/{0}.{1}'.format(uuid.uuid4().hex, ext)
+    return filename
 
 
 class Book(models.Model):
