@@ -11,7 +11,7 @@ from django.http import JsonResponse
 from StringIO import StringIO
 from PIL import Image
 
-from models import TextNote
+from models import TextNote, Book
 from forms import TextNoteForm
 from contextprocessor import note_count_processor
 
@@ -242,6 +242,7 @@ class AjaxedCreateNoteViewTest(TestCase):
         self.assertJSONEqual(error_message, response.content)
 
 
+<<<<<<< HEAD
 class TestWidgetPage(TestCase):
     """Test for page with widget"""
     def setUp(self):
@@ -275,3 +276,19 @@ class TestWidget(TestCase):
             self.response.content.split('<div>')[1].split('</div>')[0],
             self.notes
         )
+
+
+class BookAutodeleteTest(TestCase):
+    """Test for book autodeletion after last note removal"""
+    def test_book_autodelete(self):
+        note1 = TextNote(text='text')
+        note1.save()
+        note2 = TextNote(text='text')
+        note2.save()
+        book = Book(title='title')
+        book.save()
+        book.note.add(*[note1, note2])
+        note1.delete()
+        self.assertTrue(Book.objects.all())
+        note2.delete()
+        self.assertFalse(Book.objects.all())
