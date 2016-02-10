@@ -11,7 +11,7 @@ from django.http import JsonResponse
 from StringIO import StringIO
 from PIL import Image
 
-from models import TextNote
+from models import TextNote, Book
 from forms import TextNoteForm
 from contextprocessor import note_count_processor
 
@@ -184,7 +184,7 @@ class AjaxedCreateNoteViewTest(TestCase):
         )
         self.assertTrue(isinstance(response, JsonResponse))
         error_message = json.dumps({"errors": {"text": [(
-            "Field can not be empty and must contain at least"
+            "Field can not be empty and must contain at least "
             "10 uppercase symbols!")]}})
         self.assertJSONEqual(error_message, response.content)
 
@@ -240,3 +240,19 @@ class AjaxedCreateNoteViewTest(TestCase):
                     'uploaded was either not an image or '
                     'a corrupted image.')]}})
         self.assertJSONEqual(error_message, response.content)
+
+
+class BookAutodeleteTest(TestCase):
+    """Test for book autodeletion after last note removal"""
+    def test_book_autodelete(self):
+        note1 = TextNote(text='text')
+        note1.save()
+        note2 = TextNote(text='text')
+        note2.save()
+        book = Book(title='title')
+        book.save()
+        book.note.add(*[note1, note2])
+        note1.delete()
+        self.assertTrue(Book.objects.all())
+        note2.delete()
+        self.assertFalse(Book.objects.all())
