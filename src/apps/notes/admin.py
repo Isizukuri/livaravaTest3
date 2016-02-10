@@ -6,9 +6,6 @@ from models import TextNote, Book
 from forms import TextNoteForm
 
 
-<<<<<<< HEAD
-admin.site.register(TextNote)
-=======
 class BulkDeleteMixin(object):
     class SafeDeleteQuerysetWrapper(object):
         def __init__(self, wrapped_queryset):
@@ -55,6 +52,5 @@ class TextNoteAdmin(BulkDeleteMixin, admin.ModelAdmin):
 class BookAdmin(admin.ModelAdmin):
     filter_horizontal = ('note',)
 
-admin.site.register(TextNote, TextNoteAdmin)
+admin.site.register(TextNote)
 admin.site.register(Book, BookAdmin)
->>>>>>> master
