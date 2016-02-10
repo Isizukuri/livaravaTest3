@@ -69,6 +69,7 @@ class WidgetView(View):
     def get(self, request, *args, **kwargs):
         if TextNote.objects.all():
             random_note = random.choice(TextNote.objects.all()).text
+            random_note = random_note.replace("\r\n", "<br />")
         else:
             random_note = _(u'No text notes.')
         response = u"document.write('<div>{}</div>')".format(random_note)
