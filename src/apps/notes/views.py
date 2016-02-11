@@ -85,5 +85,4 @@ class RequestListView(ListView):
         else:
             response = super(RequestListView, self).get(
                 self, request, *args, **kwargs)
-            print response.context_data
             return response

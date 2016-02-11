@@ -8,9 +8,11 @@ class RequestStoreMiddleware(object):
     """Middleware to store http requests in database"""
     def process_request(self, request):
         path_info = request.META['PATH_INFO']
-        exclude_list = [reverse('admin:jsi18n'),
-                       settings.MEDIA_URL,
-                       settings.STATIC_URL]
+        exclude_list = [
+            reverse('admin:jsi18n'),
+            settings.MEDIA_URL,
+            settings.STATIC_URL,
+        ]
         save_trigger = (path_info in exclude_list) or \
             (request.is_ajax() and path_info == reverse('last_requests'))
         last_request = LastRequest(
