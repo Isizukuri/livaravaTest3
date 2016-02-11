@@ -46,11 +46,10 @@ class BulkDeleteMixin(object):
 
 
 class TextNoteAdmin(BulkDeleteMixin, admin.ModelAdmin):
-    form = TextNoteForm
-
+    pass
 
 class BookAdmin(admin.ModelAdmin):
     filter_horizontal = ('note',)
 
-admin.site.register(TextNote)
+admin.site.register(TextNote, TextNoteAdmin)
 admin.site.register(Book, BookAdmin)
