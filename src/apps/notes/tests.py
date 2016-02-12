@@ -258,7 +258,9 @@ class TestWidget(TestCase):
 
     def test_widget_content(self):
         self.assertIn(
-            urllib.unquote(self.response.content.split('<div>')[1].split('</div>')[0]),
+            urllib.unquote(
+                self.response.content.split('<div>')[1].split('</div>')[0]
+                ),
             self.notes
         )
 

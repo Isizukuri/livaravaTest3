@@ -74,5 +74,6 @@ class WidgetView(View):
             text = quote(random_note.encode('utf8'))
         else:
             text = (u'No text notes.')
-        response = u"document.write(decodeURIComponent('<div>{}</div>'))".format(text)
+        response = u"document.write(decodeURIComponent \
+            ('<div>{}</div>'))".format(text)
         return HttpResponse(response, content_type="text/javascript")

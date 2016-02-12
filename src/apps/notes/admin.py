@@ -48,6 +48,7 @@ class BulkDeleteMixin(object):
 class TextNoteAdmin(BulkDeleteMixin, admin.ModelAdmin):
     pass
 
+
 class BookAdmin(admin.ModelAdmin):
     filter_horizontal = ('note',)
 

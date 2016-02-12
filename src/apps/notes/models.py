@@ -11,7 +11,6 @@ def image_directory_path(instance, filename):
     return filename
 
 
-
 class Book(models.Model):
     """Book model, that stores text notes"""
     title = models.CharField(
