@@ -1,4 +1,5 @@
 import random
+from urllib import quote
 
 from django.views.generic import View, ListView, TemplateView
 from django.views.generic.edit import CreateView
@@ -69,8 +70,9 @@ class WidgetView(View):
     def get(self, request, *args, **kwargs):
         if TextNote.objects.all():
             random_note = random.choice(TextNote.objects.all()).text
-            random_note = random_note.replace("\r\n", "<br />")
+            random_note = random_note.replace("\r", "<br />")
+            text = quote(random_note.encode('utf8'))
         else:
-            random_note = _(u'No text notes.')
-        response = u"document.write('<div>{}</div>')".format(random_note)
-        return HttpResponse(response)
+            text = (u'No text notes.')
+        response = u"document.write(decodeURIComponent('<div>{}</div>'))".format(text)
+        return HttpResponse(response, content_type="text/javascript")

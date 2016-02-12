@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import json
+import urllib
 
 from django.test import TestCase, Client
 from django.core.urlresolvers import reverse
@@ -242,22 +243,6 @@ class AjaxedCreateNoteViewTest(TestCase):
         self.assertJSONEqual(error_message, response.content)
 
 
-<<<<<<< HEAD
-class TestWidgetPage(TestCase):
-    """Test for page with widget"""
-    def setUp(self):
-        self.client = Client()
-        self.url = reverse('widget')
-
-    def test_status(self):
-        response = self.client.get(self.url)
-        self.assertEqual(response.status_code, 200)
-
-    def test_template_used(self):
-        response = self.client.get(self.url)
-        self.assertTemplateUsed(response, 'this/widget_page.html')
-
-
 class TestWidget(TestCase):
     """Test for widget with random text note"""
     fixtures = ['notes_TextNote.json']
@@ -273,7 +258,7 @@ class TestWidget(TestCase):
 
     def test_widget_content(self):
         self.assertIn(
-            self.response.content.split('<div>')[1].split('</div>')[0],
+            urllib.unquote(self.response.content.split('<div>')[1].split('</div>')[0]),
             self.notes
         )
 
